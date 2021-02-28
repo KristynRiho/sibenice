@@ -1,0 +1,56 @@
+*,
+*::after,
+*::before{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/** container ****/
+.container{
+    background: linear-gradient(to bottom right,yellow, red,rgb(204, 245, 23), pink, purple);
+    height: 100vh;
+}
+
+/*** palyground ***/
+.playground {
+    width: 80%;
+    height: 80%;
+    background-color: beige;
+    margin: 0 auto;
+    position: relative;
+    top:10%;
+}
+
+/**** řeka ****/
+p {
+    text-align: center;
+    font-size: 32px;
+    letter-spacing: 10px;
+    position: relative;
+    top: 20%;
+}
+
+/***** button ****/
+button {
+    padding: 8px 15px;
+    margin: 0 auto;
+    position: relative;
+    top: 40%;
+    left: 47%;
+}
+
+/***** vstup ****/
+.letter {
+    text-align: center;
+    padding-top: 7%;
+    font-size: 20px;
+}
+
+.result {
+    text-align: center;
+    font-size: 22px;
+    margin-top: 20px;
+    font-weight: 700;
+    color: blueviolet;
+}
