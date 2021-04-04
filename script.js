@@ -1,7 +1,28 @@
-let lengthOfRiver;
+'use strict';
+// globální proměnné ****************************
+let river = '';
+let riverWithoutLetters;
 let numberOfAttempts;
-let river;
-let counter = 0;
+let i = 0;
+
+// funkce *********************************************
+
+//fce na získání indexu písmena
+const indexOfLetter = (array, char) => {
+  return array.indexOf(char);
+};
+
+//fce která nahradí prázdné místo v poli zadaným písmenem na odpovídajícím indexu z pole s názvem řeky
+const replaceLetterInEmptyArray = (arrayWithRiver, arrayEmpty, char) => {
+  let indexPismena = arrayWithRiver.indexOf(char);
+  arrayEmpty[indexPismena] = char;
+  let riverSliced = arrayWithRiver.slice(indexPismena + 1); //uřízne zbytek slova
+
+  arrayEmpty[
+    indexOfLetter(riverSliced, char) + (indexPismena + 1) // nahradí druhý výskyt písmena
+  ] = char;
+  return arrayEmpty;
+};
 
 /** Skrytí názvu řeky */
 document.querySelector('p').style.display = 'none';
@@ -10,69 +31,77 @@ document.querySelector('.result').style.display = 'none';
 
 /*** spustení nové hry */
 document.querySelector('button').addEventListener('click', function () {
-  let rivers = [
-    ['L', 'A', 'B', 'E'],
-    ['V', 'L', 'T', 'A', 'V', 'A'],
+  const rivers = [
+    'Labe',
+    'Vltava',
+    'Malše',
+    'Svratka',
+    'Nežárka',
+    'Sázava',
+    'Ohře',
+    'Lužnice',
+    'Jizera',
+    'Dyje',
+    'Berounka',
+    'Morava',
+    'Vydra',
   ];
   river = rivers[Math.floor(Math.random() * rivers.length)];
+  river = river.toUpperCase();
   console.log(river);
 
   document.querySelector('p').textContent = river;
   document.querySelector('.letter').style.display = 'block';
 
-  lengthOfRiver = river.length;
-  numberOfAttempts = Math.ceil(lengthOfRiver * 1.5);
-  document.querySelector('.attempts').textContent = numberOfAttempts;
+  const lengthOfRiverName = river.length;
+  numberOfAttempts = Math.ceil(lengthOfRiverName * 1.5);
+  document.querySelector('.attempts').textContent = numberOfAttempts + 1;
+  console.log(lengthOfRiverName);
+  console.log(numberOfAttempts);
 
-  let riverLettersToDisplay = [];
-  for (let i = 0; i < lengthOfRiver; i++) {
-    riverLettersToDisplay[i] = '_';
+  riverWithoutLetters = [];
+  console.log(riverWithoutLetters);
+  for (let i = 0; i < lengthOfRiverName; i++) {
+    riverWithoutLetters.push('_');
   }
-  riverLettersToDisplay = riverLettersToDisplay.join('');
+  let displayLetters = riverWithoutLetters.join(' ');
   document.querySelector('p').style.display = 'block';
-  document.querySelector('p').textContent = riverLettersToDisplay;
+  document.querySelector('p').textContent = displayLetters;
+  document.querySelector('.result').style.display = 'none';
+  i = 0;
 });
 
 /*** písmena */
-document.body.addEventListener('keydown', function (even) {
-  let pismeno = even.key.toLocaleUpperCase();
+
+document.body.addEventListener('keydown', (even) => {
+  let letter = even.key.toLocaleUpperCase();
   document.querySelector('.result').style.display = 'block';
-  counter++;
 
-  /** proč tato část musí být znovu tady vlozená?, proc to nestačí nahoře, proč když je tato část jen nahoře, tak mi to pak tady hlásí, ze je riverLettersToDisplay undefined? */
-  let riverLettersToDisplay = [];
-  for (let i = 0; i < lengthOfRiver; i++) {
-    riverLettersToDisplay[i] = '_';
-  }
-
-  if (numberOfAttempts === counter) {
-    document.querySelector('.result').textContent =
-      'Smůla, prohrál(a) jsi, tvé pokusy jsou vyčerpány!';
+  if (i === numberOfAttempts) {
+    document.querySelector(
+      '.result',
+    ).textContent = `Hra skončila, již nemáš žádné pokusy! Hledaná řeka byla ${river}`;
+    document.querySelector('p').textContent = 'GAME OVER :-(';
   } else {
-    if (river.includes(pismeno) === true) {
+    if (riverWithoutLetters.includes('_') === false) {
       document.querySelector('.result').textContent =
-        'Trefa, název řeky toto písmeno obsahuje!';
-
-      document.querySelector('p').style.display = 'block';
-      document.querySelector('p').textContent = riverLettersToDisplay;
-
-      let indexOfLetter = river.indexOf(pismeno);
-      console.log(indexOfLetter);
-      let pismenoDisplay = river[indexOfLetter];
-      console.log(pismenoDisplay);
-
-      riverLettersToDisplay[indexOfLetter] = pismenoDisplay;
-
-      console.log(riverLettersToDisplay);
-      let riverLettersToDisplayAsString = riverLettersToDisplay.join('');
-      document.querySelector('p').textContent = riverLettersToDisplayAsString;
-    } else {
-      document.querySelector('.result').textContent =
-        'Toto písmeno bohužel v názvu řeky není, zkus jiné!';
+        'Gratuluji, uhodl jsi název řeky!';
+    } else if (riverWithoutLetters.includes('_')) {
+      if (river.includes(letter)) {
+        document.querySelector('.result').textContent =
+          'Trefa, název řeky toto písmeno obsahuje!';
+        riverWithoutLetters = replaceLetterInEmptyArray(
+          river,
+          riverWithoutLetters,
+          letter,
+        );
+        document.querySelector('p').textContent = riverWithoutLetters.join(' ');
+      } else {
+        document.querySelector('.result').textContent =
+          'Bohužel zadané písmeno není v názvu, zkus jiné';
+        document.querySelector('p').textContent = riverWithoutLetters.join(' ');
+      }
     }
-  } /* let listOfLetters = [];
-else if (listOfLetters.includes(pismeno) === true) {
-        document.querySelector(".result").textContent = "Toto písmeno jsi už zadával(a), zkus jiné!"
-        listOfLetters.push(pismeno);
-        break;*/
+  }
+  i++;
 });
