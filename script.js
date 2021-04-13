@@ -12,7 +12,7 @@ const indexOfLetter = (array, char) => {
   return array.indexOf(char);
 };
 
-//fce která nahradí prázdné místo v poli zadaným písmenem na odpovídajícím indexu z pole s názvem řeky
+//fce která nahradí prázdné místo v poli zadaným písmenem na odpovídajícím indexu z pole s názvem řeky - funční pouze pro dvě stejná písmena v názvu
 const replaceLetterInEmptyArray = (arrayWithRiver, arrayEmpty, char) => {
   let indexPismena = arrayWithRiver.indexOf(char);
   arrayEmpty[indexPismena] = char;
@@ -73,7 +73,7 @@ document.querySelector('button').addEventListener('click', function () {
 
 /*** písmena */
 
-document.body.addEventListener('keydown', (even) => {
+document.body.addEventListener('keyup', (even) => {
   let letter = even.key.toLocaleUpperCase();
   document.querySelector('.result').style.display = 'block';
 
@@ -82,10 +82,15 @@ document.body.addEventListener('keydown', (even) => {
       '.result',
     ).textContent = `Hra skončila, již nemáš žádné pokusy! Hledaná řeka byla ${river}`;
     document.querySelector('p').textContent = 'GAME OVER :-(';
+  } else if (i > numberOfAttempts) {
+    document.querySelector(
+      '.result',
+    ).textContent = `Jestli chceš hrát znova, klikni na tlačítko "Nová hra"`;
   } else {
     if (riverWithoutLetters.includes('_') === false) {
       document.querySelector('.result').textContent =
         'Gratuluji, uhodl jsi název řeky!';
+      i = i + 20;
     } else if (riverWithoutLetters.includes('_')) {
       if (river.includes(letter)) {
         document.querySelector('.result').textContent =
